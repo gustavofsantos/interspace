@@ -4,6 +4,7 @@ import theme from "../../theme/theme";
 
 export default props => (
     <TopBarDiv>
+        {console.log(theme)}
         <Title>
             {props.title ? props.title : "interspace"}
         </Title>
@@ -14,9 +15,10 @@ export default props => (
 );
 
 const TopBarDiv = styled.div`
-    backgroundColor: ${theme.light.background};
+    background-color: ${theme.light.background};
     color: ${theme.light.foreground};
 
+    border: 1px;
     border-bottom: ${theme.light.backgroundDarker};
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
     z-index: 24;
@@ -24,7 +26,7 @@ const TopBarDiv = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative;
+    position: fixed;
     flex: auto;
 
     width: 100%;
