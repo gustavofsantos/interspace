@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import Message from '../atoms/Message';
 
-export default Messaging = props => (
+export default props => (
   <MessagesContainer>
     {
       props.messages.map((message, key) =>

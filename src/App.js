@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from "react-router-dom";
 
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
-import JoinRoom from './components/pages/JoinRoom';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
@@ -14,36 +12,44 @@ class App extends Component {
       channel: ''
     }
 
-    this.ipfs = new window.Ipfs({
+    this.ipfs = /* window.ipfs ? window.ipfs :  */new window.Ipfs({
       EXPERIMENTAL: {
         pubsub: true
       },
       config: {
         Addresses: {
-          Swarm: ['/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star']
+          Swarm: [
+            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star', 
+            '/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'
+          ]
         }
       }
     });
 
-    this.ipfs.on('ready', async () => {
-      const id = await this.ipfs.id();
-      this.setState({ myId: id.id });
-    });
+    if (this.ipfs.on) { 
+      this.ipfs.on('ready', async () => {
+        const id = await this.ipfs.id();
+        this.setState({ myId: id.id });
+      })
+    } else {
+      this.ipfs.id().then(id => {
+        this.setState({ myId: id.id });
+      })
+    }
+
+    this.handleChannel = this.handleChannel.bind(this);
+  }
+
+  handleChannel(channel) {
+    this.setState({ channel });
   }
 
   render() {
     return (
       <div>
-        <TopBar title={`my id: ${this.state.myId}`} />
-        <BrowserRouter>
-          <div>
-            <Route path="/" component={JoinRoom} exact />
-            <Route path="/chat" component={props => <Chat ipfs={this.ipfs} />} />
-          </div>
-        </BrowserRouter>
+        <TopBar title={this.state.myId} channel={this.state.channel} />
+        <Chat ipfs={this.ipfs} myId={this.state.myId} handleChannel={this.handleChannel} />
       </div>
     );
   }
 }
-
-export default App;

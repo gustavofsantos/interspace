@@ -1,22 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import theme from '../../theme/theme';
 
 
 export default class JoinRoom extends React.Component {
-
-  state = {
-    channel: ''
+  constructor(props) {
+    super(props);
+    this.state = {
+      channel: ''
+    }
   }
+
 
   handleJoinClick = ev => {
     console.log('handle join click');
     console.log('channel: ', this.state.channel);
+    this.props.handleChannel(this.state.channel);
   }
-
+  
   handleCreateClick = ev => {
     console.log('handle create click');
+    this.props.handleChannel(this.state.channel);
   }
 
   handleChannelChange = ev => {
@@ -27,9 +31,6 @@ export default class JoinRoom extends React.Component {
     return (
       <JoinRoomContainer>
         <input onChange={this.handleChannelChange} onSubmit={this.handleJoinClick}/>
-        <Link to={{ pathname: "/chat", state: { channel: this.state.channel } }}>
-          join
-        </Link>
         <Button onClick={this.handleCreateClick}>
           create
         </Button>

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Message from "../atoms/Message";
 import MessageBox from "../atoms/MessageBox";
 import Messaging from "./Messaging";
 import JoinRoom from "../pages/JoinRoom";
@@ -18,11 +17,6 @@ export default class Chat extends React.Component {
       self: null
     };
 
-    this.ipfs.on('ready', async () => {
-      const id = await this.ipfs.id();
-      this.setState({ myId: id.id });
-    })
-
     this.createChatRoom = this.createChatRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
     this.exitRoom = this.exitRoom.bind(this);
@@ -30,6 +24,7 @@ export default class Chat extends React.Component {
     this.getPeersInRoom = this.getPeersInRoom.bind(this);
     this.handleReceiveMessage = this.handleReceiveMessage.bind(this);
     this.handleSubmitMessage = this.handleSubmitMessage.bind(this);
+    this.handleChannel = this.handleChannel.bind(this);
 
     // setup from props
     if (props.channel) {
@@ -105,6 +100,7 @@ export default class Chat extends React.Component {
   handleChannel(chanelId) {
     this.joinRoom(chanelId)
       .then(channelId => {
+        this.props.handleChannel(channelId);
         this.setState({ channelId });
       });
   }
@@ -142,6 +138,7 @@ export default class Chat extends React.Component {
 
 const Container = styled.div`
   text-align: center;
+  font-family: 'Roboto Mono', monospace;
 `;
 
 const Layout = styled.div`
