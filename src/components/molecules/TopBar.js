@@ -30,14 +30,15 @@ const TopBarDiv = styled.div`
     flex: auto;
 
     width: 100%;
+    height: 24px;
     min-height: 64px;
     margin: 0px auto;
 `;
 
 const Title = styled.a`
-    padding-left: 0.6rem;
+    color: ${theme.light.foreground}
 `;
 
 const Button = styled.span`
-    padding-right: 0.6rem;
+    color: ${theme.light.foreground}
 `;

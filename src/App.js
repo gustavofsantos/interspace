@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route } from "react-router-dom";
+
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
+import JoinRoom from './components/pages/JoinRoom';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      myId: ''
+      myId: '',
+      channel: ''
     }
 
     this.ipfs = new window.Ipfs({
@@ -31,7 +35,12 @@ class App extends Component {
     return (
       <div>
         <TopBar title={`my id: ${this.state.myId}`} />
-        <Chat ipfs={this.ipfs} />
+        <BrowserRouter>
+          <div>
+            <Route path="/" component={JoinRoom} exact />
+            <Route path="/chat" component={props => <Chat ipfs={this.ipfs} />} />
+          </div>
+        </BrowserRouter>
       </div>
     );
   }
