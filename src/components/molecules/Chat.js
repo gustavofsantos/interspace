@@ -94,14 +94,24 @@ export default class Chat extends React.Component {
   }
 
   handleSubmitMessage(message) {
-    this.sendMessageRoom(this.state.channelId, this.state.myId, message);
+    this.sendMessageRoom(
+      this.state.channelId,
+      this.state.self,
+      message
+    );
   }
 
-  handleChannel(chanelId) {
+  handleChannel(chanelId, name) {
     this.joinRoom(chanelId)
       .then(channelId => {
-        this.props.handleChannel(channelId);
-        this.setState({ channelId });
+        this.props.handleChannel(channelId, name);
+        this.setState({ 
+          self: {
+            name: name,
+            id: channelId
+          },
+          channelId
+        });
       });
   }
 

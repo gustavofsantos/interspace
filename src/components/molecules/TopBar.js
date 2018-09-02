@@ -16,11 +16,11 @@ export default props => (
 );
 
 const TopBarDiv = styled.div`
-  background-color: ${theme.light.background};
-  color: ${theme.light.foreground};
+  background-color: ${theme.dark.background};
+  color: ${theme.dark.foreground};
 
   border: 1px;
-  border-bottom: ${theme.light.backgroundDarker};
+  border-bottom: ${theme.dark.backgroundDarker};
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
   z-index: 24;
 
@@ -37,7 +37,7 @@ const TopBarDiv = styled.div`
 `;
 
 const Title = styled.a`
-  color: ${theme.light.foreground}
+  color: ${theme.dark.foreground};
   margin-left: 24px;
   font-family: 'VT323', monospace;
 `;

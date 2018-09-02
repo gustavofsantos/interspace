@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import theme from "../../theme/theme";
 
 export default class MessageBox extends React.Component {
   state = {
@@ -23,11 +24,14 @@ export default class MessageBox extends React.Component {
         <input style={{
           width: '100%',
           display: 'inline-block',
-          border: 'none',
-          borderRadius: '1.6rem',
-          padding: '0.6rem',
-          backgroundColor: '#555',
-          
+          padding: '0.8em',
+          borderTopWidth: '1px',
+          borderTopColor: '#555',
+          borderLeft: 'none',
+          borderRight: 'none',
+          borderBottom:'none',
+          color: `${theme.dark.foreground}`,
+          background: `${theme.dark.background}`
         }}
         type="text"
         name="message"
@@ -40,11 +44,12 @@ export default class MessageBox extends React.Component {
 }
 
 const MessageBoxContainer = styled.div`
+  font-family: 'Roboto Mono', monospace;
   max-width: 60rem;
-  width: 100%;
+  width: 100vw;
   text-align: center;
   position: fixed;
+  border-left: ${theme.dark.accent};
   bottom: 0;
-  padding-bottom: 1.6rem;
-  boxShadow: 'box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.24)'
+  padding-bottom: 0;
 `;

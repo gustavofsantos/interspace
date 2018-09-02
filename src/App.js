@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import GridLoader from 'react-spinners/GridLoader';
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
 
@@ -12,7 +12,7 @@ export default class App extends Component {
       channel: ''
     }
 
-    this.ipfs = /* window.ipfs ? window.ipfs :  */new window.Ipfs({
+    this.ipfs = new window.Ipfs({
       EXPERIMENTAL: {
         pubsub: true
       },
@@ -48,7 +48,12 @@ export default class App extends Component {
     return (
       <div>
         <TopBar title={this.state.myId} channel={this.state.channel} />
-        <Chat ipfs={this.ipfs} myId={this.state.myId} handleChannel={this.handleChannel} />
+        {
+          this.state.myId ? 
+            <Chat ipfs={this.ipfs} myId={this.state.myId} handleChannel={this.handleChannel} /> 
+            :
+            <GridLoader color={'#FAFAFA'} loading={this.state.myId ? false : true} />
+        }
       </div>
     );
   }

@@ -10,8 +10,8 @@ const theme = {
         accentDarker: "#009624"
     },
     dark: {
-        background: "#000",
-        backgroundDarker: "#000",
+        background: "#2a2a2a",
+        backgroundDarker: "#101010",
         foreground: "#DDD",
         foregroundDarker: "#CCC",
         accent: "#00c853",
