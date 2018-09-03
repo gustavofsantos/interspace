@@ -1,15 +1,18 @@
 import React from 'react';
 import QRCode from "qrcode.react";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import QrReader from 'react-qr-reader'
 import styled from 'styled-components';
 import theme from '../../theme/theme';
-
 
 export default class JoinRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       channel: '',
-      name: ''
+      name: '',
+      reader: false
     }
   }
 
@@ -18,7 +21,7 @@ export default class JoinRoom extends React.Component {
     console.log('channel: ', this.state.channel);
     this.props.handleChannel(this.state.channel);
   }
-  
+
   handleChannelSubmit = ev => {
     if (ev.key === "Enter") {
       this.props.handleChannel(this.state.channel);
@@ -48,32 +51,47 @@ export default class JoinRoom extends React.Component {
     }
   }
 
+  handleChanelQRCodeReader = () => {
+    this.setState({ reader: true })
+  }
+
   render() {
     return (
       <JoinRoomContainer>
         <div>
-          <TextInputLabel>
-            channel name:
-          </TextInputLabel>
-          <TextInput 
+          <TextField
             autoFocus
+            placeholder="channel"
             value={this.state.channel}
             onChange={this.handleChannelChange}
-            onKeyDown={this.handleChannelSubmit} />
-        </div>
-        <div>
-          <TextInputLabel>
-            your name:
-          </TextInputLabel>
-          <TextInput
+            onKeyDown={this.handleChannelSubmit}
+          />
+          <TextField
+            placeholder="your name"
             value={this.state.name}
             onChange={this.handleNameChange}
-            onKeyDown={this.handleNameSubmit} />
+            onKeyDown={this.handleNameSubmit}
+          />
         </div>
+        <Button onClick={this.handleChannelSubmit} variant="outlined">
+          join
+        </Button>
+        <Button onClick={this.handleChanelQRCodeReader} variant="outlined">
+          read
+        </Button>
         <div>
-          <QRCode value={this.state.channel} 
-            fgColor={theme.accent}
-            bgColor={theme.backgroundDarker}/>
+          {
+            this.state.reader ?
+              <QrReader
+                onError={() => console.log('error')}
+                onScan={data => console.log('scan', data)}
+              />
+              :
+              <QRCode value={this.state.channel}
+                fgColor={theme.accent}
+                bgColor={theme.backgroundDarker}
+              />
+          }
         </div>
       </JoinRoomContainer>
     );
@@ -87,21 +105,4 @@ const JoinRoomContainer = styled.div`
   display: inline-block;
   max-width: 60rem;
   width: 100vw;
-`;
- 
-const TextInput = styled.input`
-  color: ${theme.foreground};
-  background: none;
-  border: none;
-  padding: 0.2em;
-  margin-left: 10px;
-  font-family: 'Roboto Mono', monospace;
-`;
-
-const TextInputLabel = styled.span`
-  font-family: 'Roboto Mono', monospace;
-`;
-
-const Button = styled.button`
-  padding: 0.4em;
 `;

@@ -23,6 +23,7 @@ export default props => (
 const ParticipantsContainer = styled.div`
   background: ${theme.background};
   color: ${theme.foreground};
+  text-align: start;
 `;
 
 const ParticipantsNames = styled.div`
