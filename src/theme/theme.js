@@ -1,5 +1,4 @@
-const theme = {
-    default: { ...this.light },
+const themes = {
     light: {
         background: "#FFF",
         backgroundDarker: "#EEE",
@@ -19,5 +18,7 @@ const theme = {
         accentDarker: "#009624"
     }
 };
+
+const theme = themes.light;
 
 export default theme;

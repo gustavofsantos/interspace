@@ -49,8 +49,10 @@ export default class App extends Component {
       <div>
         <TopBar title={this.state.myId} channel={this.state.channel} />
         {
-          this.state.myId ? 
-            <Chat ipfs={this.ipfs} myId={this.state.myId} handleChannel={this.handleChannel} /> 
+          this.state.myId ?
+            <Chat ipfs={this.ipfs}
+              myId={this.state.myId}
+              handleChannel={this.handleChannel} />
             :
             <GridLoader color={'#FAFAFA'} loading={this.state.myId ? false : true} />
         }

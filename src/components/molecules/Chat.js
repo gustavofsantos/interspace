@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MessageBox from "../atoms/MessageBox";
 import Messaging from "./Messaging";
 import JoinRoom from "../pages/JoinRoom";
+import Participants from "../atoms/Participants";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -39,14 +40,26 @@ export default class Chat extends React.Component {
     return 'aaaaaaaaaaaaaaaabbbc';
   }
 
+  handleNewParticipant(name) {
+    console.log('new participant: ', name)
+    this.setState({
+      participants: [ ...this.state.participants, name ]
+    });
+  }
+
   handleReceiveMessage(message) {
     const msg = JSON.parse(message.data.toString());
-    this.setState({
-      messages: [...this.state.messages, {
-        author: msg.author,
-        message: msg.message
-      }]
-    })
+    console.log('handleReceiveMessage: ', message);
+    if (msg.type === 'announce') {
+      this.handleNewParticipant(msg.author)
+    } else {
+      this.setState({
+        messages: [...this.state.messages, {
+          author: msg.author,
+          message: msg.message
+        }]
+      });
+    }
   }
 
   joinRoom(id) {
@@ -76,14 +89,15 @@ export default class Chat extends React.Component {
     });
   }
 
-  sendMessageRoom(id, author, message) {
-    console.log('sendMessageRoom', id, author, message)
+  sendMessageRoom(channel, author, message, type='message') {
     return new Promise((resolve, reject) => {
       this.ipfs.pubsub.publish(
-        id,
+        channel,
         Buffer.from(JSON.stringify({
+          type,
           author,
-          message
+          message,
+          date: `${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}`
         })),
         err => {
           if (err) reject(err);
@@ -105,10 +119,11 @@ export default class Chat extends React.Component {
     this.joinRoom(chanelId)
       .then(channelId => {
         this.props.handleChannel(channelId, name);
-        this.setState({ 
+        this.sendMessageRoom(channelId, name, '', 'announce')
+        this.setState({
           self: {
             name: name,
-            id: channelId
+            id: this.state.myId
           },
           channelId
         });
@@ -129,16 +144,15 @@ export default class Chat extends React.Component {
       <Container>
         <Layout>
           {
-            this.state.channelId ? 
+            this.state.channelId ?
               <div>
-                <p>curent channel: {this.state.channelId}</p>
+                <Participants participants={this.state.participants} channel={this.state.channelId} />
                 <Messaging messages={this.state.messages} />
                 <MessageBox handleSubmit={this.handleSubmitMessage} />
               </div>
               :
               <JoinRoom handleChannel={this.handleChannel} />
           }
-          
         </Layout>
       </Container>
     );

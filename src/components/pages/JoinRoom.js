@@ -72,8 +72,8 @@ export default class JoinRoom extends React.Component {
         </div>
         <div>
           <QRCode value={this.state.channel} 
-            fgColor={theme.dark.accent}
-            bgColor={theme.dark.backgroundDarker}/>
+            fgColor={theme.accent}
+            bgColor={theme.backgroundDarker}/>
         </div>
       </JoinRoomContainer>
     );
@@ -81,8 +81,8 @@ export default class JoinRoom extends React.Component {
 }
 
 const JoinRoomContainer = styled.div`
-  background: ${theme.dark.backgroundDarker};
-  color: ${theme.dark.foreground};
+  background: ${theme.backgroundDarker};
+  color: ${theme.foreground};
   padding-top: 60px;
   display: inline-block;
   max-width: 60rem;
@@ -90,7 +90,7 @@ const JoinRoomContainer = styled.div`
 `;
  
 const TextInput = styled.input`
-  color: ${theme.dark.foreground};
+  color: ${theme.foreground};
   background: none;
   border: none;
   padding: 0.2em;
