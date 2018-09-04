@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import GridLoader from 'react-spinners/GridLoader';
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
+import Loading from './components/atoms/Loading';
 
 export default class App extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ export default class App extends Component {
               myId={this.state.myId}
               handleChannel={this.handleChannel} />
             :
-            <GridLoader color={'#FAFAFA'} loading={this.state.myId ? false : true} />
+            <Loading loading={this.state.myId ? false : true} label="loading" />
         }
       </div>
     );

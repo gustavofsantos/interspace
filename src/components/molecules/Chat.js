@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MessageBox from "../atoms/MessageBox";
 import Messaging from "./Messaging";
 import JoinRoom from "../pages/JoinRoom";
-import Participants from "../atoms/Participants";
+import Participants from "../molecules/Participants";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -26,6 +26,9 @@ export default class Chat extends React.Component {
     this.handleReceiveMessage = this.handleReceiveMessage.bind(this);
     this.handleSubmitMessage = this.handleSubmitMessage.bind(this);
     this.handleChannel = this.handleChannel.bind(this);
+    this.handleNewParticipant = this.handleNewParticipant.bind(this);
+    this.sendAnnouncementMessage = this.sendAnnouncementMessage.bind(this);
+    this.confirmReceivedMessage = this.confirmReceivedMessage.bind(this);
 
     // setup from props
     if (props.channel) {
@@ -41,24 +44,34 @@ export default class Chat extends React.Component {
   }
 
   handleNewParticipant(name) {
-    console.log('new participant: ', name)
-    this.setState({
-      participants: [ ...this.state.participants, name ]
-    });
+    console.log('new participant: ', name);
+    if (!this.state.participants.includes(name)) {
+      console.log('if --')
+      this.setState({
+        participants: [ ...this.state.participants, name ]
+      });
+      // the new participant does not have me in their context
+      this.sendAnnouncementMessage(this.state.channelId, this.state.self.name);
+    }
   }
 
   handleReceiveMessage(message) {
     const msg = JSON.parse(message.data.toString());
-    console.log('handleReceiveMessage: ', message);
+    console.log('handleReceiveMessage: ', msg);
     if (msg.type === 'announce') {
-      this.handleNewParticipant(msg.author)
+      this.handleNewParticipant(msg.author.name || 'anon')
+    } else if (msg.type === 'confirm') {
+      console.log(`message was delivered`);
     } else {
       this.setState({
         messages: [...this.state.messages, {
           author: msg.author,
-          message: msg.message
+          message: msg.message,
+          id: msg.id,
+          confirmed: false
         }]
       });
+      this.confirmReceivedMessage(this.state.channelId, msg.msgId);
     }
   }
 
@@ -95,9 +108,10 @@ export default class Chat extends React.Component {
         channel,
         Buffer.from(JSON.stringify({
           type,
-          author,
+          author: this.state.self,
           message,
-          date: `${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}`
+          date: `${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}`,
+          id: Date.now()
         })),
         err => {
           if (err) reject(err);
@@ -105,6 +119,19 @@ export default class Chat extends React.Component {
         }
       );
     });
+  }
+
+  sendAnnouncementMessage(channel, name) {
+    this.sendMessageRoom(channel, name, '', 'announce');
+  }
+
+  confirmReceivedMessage(channel, msgId) {
+    this.sendMessageRoom(
+      channel,
+      this.state.self.name,
+      msgId,
+      'confirm'
+    );
   }
 
   handleSubmitMessage(message) {
@@ -119,7 +146,6 @@ export default class Chat extends React.Component {
     this.joinRoom(chanelId)
       .then(channelId => {
         this.props.handleChannel(channelId, name);
-        this.sendMessageRoom(channelId, name, '', 'announce')
         this.setState({
           self: {
             name: name,
@@ -127,6 +153,7 @@ export default class Chat extends React.Component {
           },
           channelId
         });
+        this.sendAnnouncementMessage(channelId, name);
       });
   }
 

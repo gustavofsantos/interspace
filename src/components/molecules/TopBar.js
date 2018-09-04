@@ -1,13 +1,31 @@
 import React from "react";
-import styled from "styled-components";
 import QRCode from "qrcode.react";
 
 import Dialog from '@material-ui/core/Dialog';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import theme from "../../theme/theme";
 import { DialogContent } from "@material-ui/core";
 
-export default class TopBar extends React.Component { 
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+};
+
+class TopBar extends React.Component { 
   constructor(props) {
     super(props);
 
@@ -34,56 +52,35 @@ export default class TopBar extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <TopBarDiv>
-        {console.log(theme)}
-        <Title>
-          interspace
-        </Title>
-        <QRCodeButtonContainer onClick={this.handleOpenQRCodeDialog}>
-          <QRCode value={this.props.channel} style={{ width: "100%", height: "100%" }} />
-        </QRCodeButtonContainer>
-        <Dialog
-          open={this.state.showcode}
-          onClose={this.handleCloseQRCodeDialog} >
-          <DialogContent>
-            <QRCode value={this.props.channel} style={{ width: "100%", height: "100%" }} />
-          </DialogContent>
-        </Dialog>
-      </TopBarDiv>
+      <MuiThemeProvider theme={theme}>
+        <div className={ classes.root }>
+          <AppBar position="fixed">
+            <Toolbar>
+              <Typography variant="title" color="inherit" className={classes.flex}>
+                interspace
+              </Typography>
+              {
+                this.props.channel ? 
+                  <Button color="inherit" onClick={this.handleOpenQRCodeDialog}>QRCode</Button>
+                  :
+                  <div></div>
+              }
+            </Toolbar>
+          </AppBar>
+
+          <Dialog
+            open={this.state.showcode}
+            onClose={this.handleCloseQRCodeDialog} >
+            <DialogContent>
+              <QRCode value={this.props.channel} style={{ width: "100%", height: "100%" }} />
+            </DialogContent>
+          </Dialog>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
 
-const TopBarDiv = styled.div`
-  background-color: ${theme.background};
-  color: ${theme.foreground};
-
-  border: 1px;
-  border-bottom: ${theme.backgroundDarker};
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  z-index: 24;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed;
-  flex: auto;
-
-  width: 100%;
-  height: 24px;
-  min-height: 64px;
-  margin: 0px auto;
-`;
-
-const Title = styled.a`
-  color: ${theme.foreground};
-  margin-left: 24px;
-  font-family: 'VT323', monospace;
-`;
-
-const QRCodeButtonContainer = styled.div`
-  max-width: 24px;
-  max-height: 24px;
-  margin-right: 24px;
-`
+export default withStyles(styles)(TopBar);
