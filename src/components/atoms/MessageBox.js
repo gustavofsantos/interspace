@@ -25,13 +25,10 @@ export default class MessageBox extends React.Component {
           width: '100%',
           display: 'inline-block',
           padding: '0.8em',
-          borderTopWidth: '1px',
-          borderTopColor: '#555',
-          borderLeft: 'none',
-          borderRight: 'none',
-          borderBottom:'none',
+          borderColor: theme.foreground,
+          borderRadius: '2em',
           color: `${theme.foreground}`,
-          background: `${theme.background}`
+          background: `${theme.backgroundDarker}`
         }}
         type="text"
         name="message"
@@ -51,5 +48,5 @@ const MessageBoxContainer = styled.div`
   position: fixed;
   border-left: ${theme.accent};
   bottom: 0;
-  padding-bottom: 0;
+  margin-bottom: 1em;
 `;

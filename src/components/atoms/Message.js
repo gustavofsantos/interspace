@@ -21,7 +21,7 @@ const MessageBox = styled.div`
   margin-bottom: 24px;
 `;
 
-const MessageSender = styled.span`
+const MessageSender = styled.p`
   font-family: 'Roboto Mono', monospace;
   font-weight: bold;
   color: ${theme.foreground};

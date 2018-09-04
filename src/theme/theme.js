@@ -1,24 +1,20 @@
-const themes = {
-    light: {
-        background: "#FFF",
-        backgroundDarker: "#EEE",
-        foreground: "#333",
-        foregroundDarker: "#222",
-        accent: "#00c853",
-        accentLighter: "#5efc82",
-        accentDarker: "#009624"
-    },
-    dark: {
-        background: "#2a2a2a",
-        backgroundDarker: "#101010",
-        foreground: "#DDD",
-        foregroundDarker: "#CCC",
-        accent: "#00c853",
-        accentLighter: "#5efc82",
-        accentDarker: "#009624"
-    }
-};
+import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = themes.light;
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#1a1a1a',
+      main: '#000',
+      dark: '#000',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#66ffa6',
+      main: '#00e676',
+      dark: '#00b248',
+      contrastText: '#000',
+    },
+  },
+});
 
 export default theme;

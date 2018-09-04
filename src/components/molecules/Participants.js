@@ -1,17 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+
 import theme from "../../theme/theme";
+import ParticipantChip from "../atoms/ParticipantChip";
 
 export default props => (
   <ParticipantsContainer>
     <ParticipantsNames>
       {
-        props.participants ?
-          props.participants.map((participant, key) =>
-            <span key={key}>{participant || 'anon'} </span>
-          )
-          :
-          <p>you're alone</p>
+        props.participants.map((participant, key) =>
+          <ParticipantChip participant={participant} key={key} />
+        )
       }
     </ParticipantsNames>
     <ChannelInfo>
@@ -23,6 +22,7 @@ export default props => (
 const ParticipantsContainer = styled.div`
   background: ${theme.background};
   color: ${theme.foreground};
+  text-align: start;
 `;
 
 const ParticipantsNames = styled.div`
