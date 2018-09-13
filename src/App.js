@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import 'antd/dist/antd.css';
+import { Layout } from "antd";
+
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
 import Loading from './components/atoms/Loading';
+
+const { Header, Content } = Layout;
 
 export default class App extends Component {
   constructor(props) {
@@ -47,15 +52,21 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <TopBar title={this.state.myId} channel={this.state.channel} />
-        {
-          this.state.myId ?
-            <Chat ipfs={this.ipfs}
-              myId={this.state.myId}
-              handleChannel={this.handleChannel} />
-            :
-            <Loading loading={this.state.myId ? false : true} label="loading" />
-        }
+        <Layout>
+          <Header>
+            <TopBar title={this.state.myId} channel={this.state.channel} />
+          </Header>
+          <Content>
+            {
+              this.state.myId ?
+                <Chat ipfs={this.ipfs}
+                  myId={this.state.myId}
+                  handleChannel={this.handleChannel} />
+                :
+                <Loading loading={this.state.myId ? false : true} label="loading" />
+            }
+          </Content>
+        </Layout>
       </div>
     );
   }

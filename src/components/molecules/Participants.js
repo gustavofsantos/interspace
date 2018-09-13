@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-
 import theme from "../../theme/theme";
 import ParticipantChip from "../atoms/ParticipantChip";
 
@@ -13,9 +12,6 @@ export default props => (
         )
       }
     </ParticipantsNames>
-    <ChannelInfo>
-      <p>@ {props.channel}</p>
-    </ChannelInfo>
   </ParticipantsContainer>
 );
 

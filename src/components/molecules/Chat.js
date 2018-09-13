@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import MessageBox from "../atoms/MessageBox";
-import Messaging from "./Messaging";
+import ChatView from './ChatView';
 import JoinRoom from "../pages/JoinRoom";
-import Participants from "../molecules/Participants";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -172,11 +170,11 @@ export default class Chat extends React.Component {
         <Layout>
           {
             this.state.channelId ?
-              <div>
-                <Participants participants={this.state.participants} channel={this.state.channelId} />
-                <Messaging messages={this.state.messages} />
-                <MessageBox handleSubmit={this.handleSubmitMessage} />
-              </div>
+              <ChatView 
+                channelId={this.state.channelId}
+                messages={this.state.messages}
+                participants={this.state.participants}
+                handleSubmitMessage={this.handleSubmitMessage} />
               :
               <JoinRoom handleChannel={this.handleChannel} />
           }
@@ -193,7 +191,6 @@ const Container = styled.div`
 `;
 
 const Layout = styled.div`
-  padding-top: 3.4rem;
   display: inline-block;
   max-width: 60rem;
   width: 100vw;

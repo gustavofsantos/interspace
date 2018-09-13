@@ -59,7 +59,7 @@ class TopBar extends React.Component {
           <AppBar position="fixed">
             <Toolbar>
               <Typography variant="title" color="inherit" className={classes.flex}>
-                interspace
+                {this.props.channel || "interspace"}
               </Typography>
               {
                 this.props.channel ? 

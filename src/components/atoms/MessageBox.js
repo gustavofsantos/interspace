@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input, Button } from 'antd';
 import styled from 'styled-components';
 import theme from "../../theme/theme";
 
@@ -18,23 +19,30 @@ export default class MessageBox extends React.Component {
     }
   }
 
+  onUploadFileClick = ev => {
+    console.log('onUploadFileClick')
+  }
+
   render() {
     return (
       <MessageBoxContainer>
-        <input style={{
-          width: '100%',
-          display: 'inline-block',
-          padding: '0.8em',
-          borderColor: theme.foreground,
-          borderRadius: '2em',
-          color: `${theme.foreground}`,
-          background: `${theme.backgroundDarker}`
-        }}
-        type="text"
-        name="message"
-        value={this.state.message}
-        onChange={this.onChange.bind(this)}
-        onKeyDown={this.onSubmit.bind(this)} />
+        <div style={{
+          display: 'flex',
+          flex: '1 1 auto',
+          marginRight: '0.5em'
+        }}>
+          <Input 
+            placeholder="message"
+            value={this.state.message}
+            onChange={this.onChange.bind(this)}
+            onKeyDown={this.onSubmit.bind(this)}
+          />
+        </div>
+        <div style={{
+          display: 'block'
+        }}>
+          <Button type="primary" shape="circle" icon="file-add" onClick={this.onUploadFileClick} />
+        </div>
       </MessageBoxContainer>
     )
   }
@@ -42,11 +50,11 @@ export default class MessageBox extends React.Component {
 
 const MessageBoxContainer = styled.div`
   font-family: 'Roboto Mono', monospace;
-  max-width: 60rem;
-  width: 100vw;
-  text-align: center;
-  position: fixed;
-  border-left: ${theme.accent};
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   bottom: 0;
-  margin-bottom: 1em;
+  margin-bottom: 0em;
+  justify-content: flex-end;
 `;

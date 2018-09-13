@@ -5,7 +5,7 @@ import theme from "../../theme/theme";
 export default props => (
   <MessageBox>
     <MessageSender>
-      #{props.sender.name || "anon"}
+      {props.sender.name || "anon"}:
     </MessageSender>
     <MessageText>
       {props.text}
@@ -21,7 +21,7 @@ const MessageBox = styled.div`
   margin-bottom: 24px;
 `;
 
-const MessageSender = styled.p`
+const MessageSender = styled.span`
   font-family: 'Roboto Mono', monospace;
   font-weight: bold;
   color: ${theme.foreground};
