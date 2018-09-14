@@ -41,7 +41,7 @@ export default class MessageBox extends React.Component {
         <div style={{
           display: 'block'
         }}>
-          <Button type="primary" shape="circle" icon="file-add" onClick={this.onUploadFileClick} />
+          <Button style={{ background: '#000' }} type="primary" shape="circle" icon="file-add" onClick={this.onUploadFileClick} />
         </div>
       </MessageBoxContainer>
     )
@@ -49,12 +49,13 @@ export default class MessageBox extends React.Component {
 }
 
 const MessageBoxContainer = styled.div`
-  font-family: 'Roboto Mono', monospace;
+  position: fixed !important;
   box-sizing: border-box;
-  display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 0;
-  margin-bottom: 0em;
   justify-content: flex-end;
+  bottom: 0px !important;
+  left: 0px;
+  right: 0px;
+  max-width: 60rem;
 `;

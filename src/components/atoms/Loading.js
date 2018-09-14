@@ -1,14 +1,22 @@
 import React from "react";
 import styled from "styled-components";
+import { Redirect } from "react-router-dom";
 import GridLoader from 'react-spinners/GridLoader';
 
 export default props => (
-  <LoadingContainer>
-    <GridLoader
-      color='#00e676'
-      loading={props.loading} />
-    <p>{props.label}</p>
-  </LoadingContainer>
+  <div>
+    {
+      props.loading ?
+        <Redirect push to="/createuser" />
+        :
+        <LoadingContainer>
+          <GridLoader
+            color='#00e676'
+            loading={props.loading} />
+          <p>{props.label}</p>
+        </LoadingContainer>
+    }
+  </div>
 );
 
 const LoadingContainer = styled.div`

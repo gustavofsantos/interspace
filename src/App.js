@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import 'antd/dist/antd.css';
 import { Layout } from "antd";
 
 import TopBar from './components/molecules/TopBar';
 import Chat from './components/molecules/Chat';
 import Loading from './components/atoms/Loading';
+import CreateUser from './components/pages/CreateUser';
+import ImportUser from './components/pages/ImportUser';
+import JoinRoom from './components/pages/JoinRoom';
 
 const { Header, Content } = Layout;
 
@@ -52,19 +56,28 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Layout>
-          <Header>
+        <Layout style={{
+          height: '100vh'
+        }}>
+          <Header style={{
+            background: '#000',
+            color: '#FFF'
+          }}>
             <TopBar title={this.state.myId} channel={this.state.channel} />
           </Header>
           <Content>
-            {
-              this.state.myId ?
-                <Chat ipfs={this.ipfs}
-                  myId={this.state.myId}
-                  handleChannel={this.handleChannel} />
-                :
-                <Loading loading={this.state.myId ? false : true} label="loading" />
-            }
+            <Router>
+              <div>
+                <Route exact path="/" component={() => (<Loading loading={this.state.myId ? false : true} label="loading" />)} />
+                <Route path="/createuser" component={CreateUser} />
+                <Route path="/importuser" component={ImportUser} />
+                <Route path="/chat" component={() => (
+                  <Chat ipfs={this.ipfs}
+                    myId={this.state.myId}
+                    handleChannel={this.handleChannel} />)} />
+                <Route path="/join" component={() => (<JoinRoom handleChannel={this.handleChannel} />)} />
+              </div>
+            </Router>
           </Content>
         </Layout>
       </div>

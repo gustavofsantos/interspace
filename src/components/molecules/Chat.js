@@ -167,7 +167,9 @@ export default class Chat extends React.Component {
   render() {
     return (
       <Container>
-        <Layout>
+        <Layout style={{
+          height: '100vh'
+        }}>
           {
             this.state.channelId ?
               <ChatView 

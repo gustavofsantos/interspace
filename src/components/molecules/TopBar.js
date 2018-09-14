@@ -54,7 +54,30 @@ class TopBar extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <MuiThemeProvider theme={theme}>
+      <div>
+        <span>
+          {this.props.channel || "interspace"}
+        </span>
+        {
+          this.props.channel ? 
+            <Button color="inherit" onClick={this.handleOpenQRCodeDialog}>QRCode</Button>
+            :
+            <div></div>
+        }
+        <Dialog
+          open={this.state.showcode}
+          onClose={this.handleCloseQRCodeDialog} >
+          <DialogContent>
+            <QRCode value={this.props.channel} style={{ width: "100%", height: "100%" }} />
+          </DialogContent>
+        </Dialog>
+      </div>
+      
+    );
+  }
+}
+
+{/* <MuiThemeProvider theme={theme}>
         <div className={ classes.root }>
           <AppBar position="fixed">
             <Toolbar>
@@ -78,9 +101,6 @@ class TopBar extends React.Component {
             </DialogContent>
           </Dialog>
         </div>
-      </MuiThemeProvider>
-    );
-  }
-}
+      </MuiThemeProvider> */}
 
 export default withStyles(styles)(TopBar);
