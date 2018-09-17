@@ -9,6 +9,7 @@ import Loading from './components/atoms/Loading';
 import CreateUser from './components/pages/CreateUser';
 import ImportUser from './components/pages/ImportUser';
 import JoinRoom from './components/pages/JoinRoom';
+import AppBar from './components/molecules/AppBar';
 
 const { Header, Content } = Layout;
 
@@ -56,6 +57,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
+        <AppBar show={true} />
         <Layout style={{
           height: '100vh'
         }}>
