@@ -1,8 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import theme from "../../theme/theme";
+import { baseTheme } from "../../theme/theme";
 
-export default props => (
+export default props => {
+  if (props.isFile) {
+    return MessageFileContainer(props);
+  } else {
+    return MessageTextContainer(props);
+  }
+};
+
+const MessageTextContainer = props => (
   <MessageBox>
     <MessageSender>
       {props.sender.name || "anon"}:
@@ -13,23 +21,37 @@ export default props => (
   </MessageBox>
 );
 
+const MessageFileContainer = props => (
+  <MessageBox>
+    <MessageSender>
+      {props.sender.name || "anon"}:
+    </MessageSender>
+    <MessageFileLink onClick={props.downloadFile(props.text)}>
+      {props.text}
+    </MessageFileLink>
+  </MessageBox>
+);
+
 const MessageBox = styled.div`
-  background-color: ${theme.backgroundDarker};
+  background-color: ${baseTheme.colorBackgroundDarker};
   max-width: 24rem;
+  min-width: 6rem;
   text-align: start;
-  margin-top: 24px;
-  margin-bottom: 24px;
+  padding: 5px;
+  box-sizing: border-box;
 `;
 
 const MessageSender = styled.span`
-  font-family: 'Roboto Mono', monospace;
   font-weight: bold;
-  color: ${theme.foreground};
+  color: ${baseTheme.colorForeground};
   margin-right: 0.6em;
 `;
-  
+
 const MessageText = styled.span`
-  font-family: 'Roboto Mono', monospace;
-  color: ${theme.foreground};
+  color: ${baseTheme.colorForeground};
   padding-top: 5px;
+`;
+
+const MessageFileLink = styled.a`
+  color: ${baseTheme.colorAccentDarker}
 `;
