@@ -1,16 +1,14 @@
 import React from 'react';
 import styled from "styled-components";
-import { Form, Icon, Input, Button, Upload } from 'antd';
 import { Redirect } from "react-router-dom";
-import { createUser, loadProfile } from '../../lib/lib'
-import FormItem from 'antd/lib/form/FormItem';
+import { userCreateProfile } from '../../lib/lib'
 import { baseTheme } from "../../theme/theme";
 
-class CreateUserForm extends React.Component {
+export default class CreateUserForm extends React.Component {
 
   state = {
     name: '',
-    picture: '',
+    description: '',
     id: '',
     ready: false
   }
@@ -21,11 +19,21 @@ class CreateUserForm extends React.Component {
     })
   }
 
-  handleCreateUser = () => {
-    createUser(this.state.name, this.state.picture, 'smckmsdc');
+  handleDescriptionChange = ev => {
     this.setState({
-      ready: true
+      description: ev.target.value
     });
+  }
+
+  handleCreateUser = (ev) => {
+    ev.preventDefault();
+    userCreateProfile(this.state.name, this.state.description)
+    .then(user => {
+      console.log('created user: ', user);
+    })
+    // this.setState({
+    //   ready: true
+    // });
   }
 
   handleImportUser = ipfsCID => {
@@ -38,7 +46,6 @@ class CreateUserForm extends React.Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
 
     if (this.state.ready) {
       return <Redirect to="/chat" />
@@ -57,13 +64,18 @@ class CreateUserForm extends React.Component {
         </FormRow>
 
         <FormRow>
-          <FormLabel for="name">Photo</FormLabel>
-          <FormInput id="name" name="name" type="text" placeholder="Your name"
-            value={this.state.name} onChange={this.handleNameChange} />
+          <FormLabel for="name">Description</FormLabel>
+          <FormInput id="name" name="name" type="text" placeholder="Your description"
+            value={this.state.description} onChange={this.handleDescriptionChange} />
         </FormRow>
 
         <FormRow>
+          <FormButton onClick={this.handleCreateUser}>
+            Create
+          </FormButton>
+        </FormRow>
 
+        <FormRow>
           <FormQRCode>
             <FormDownloadQRCodeButton>
               Download it
@@ -71,45 +83,6 @@ class CreateUserForm extends React.Component {
           </FormQRCode>
         </FormRow>
       </FormContainer>
-    );
-
-    return (
-      <Form onSubmit={this.handleCreateUser} style={{
-        maxWidth: '60rem'
-      }}>
-        <FormItem label="Username" >
-          {getFieldDecorator('userName', {
-            rules: [{ required: true, message: 'Please input your username' }],
-          })(
-            <Input
-              onChange={this.handleNameChange}
-              value={this.state.name}
-              prefix={
-                <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-              }
-              placeholder="Username" />
-          )}
-        </FormItem>
-        <FormItem
-          label="Upload a photo"
-        >
-          {getFieldDecorator('upload', {
-            valuePropName: 'fileList',
-            getValueFromEvent: this.handlePhotoUpload,
-          })(
-            <Upload name="logo" action="/upload.do" listType="picture">
-              <Button>
-                <Icon type="upload" /> Upload
-              </Button>
-            </Upload>
-          )}
-        </FormItem>
-        <FormItem>
-          <Button type="primary" htmlType="submit" onClick={this.handleCreateUser}>
-            Create
-          </Button>
-        </FormItem>
-      </Form>
     );
   }
 }
@@ -149,6 +122,10 @@ const FormInput = styled.input`
   font-size: 14px;
 `;
 
+const FormButton = styled.button`
+
+`;
+
 const FormQRCode = styled.div`
 
 `;
@@ -162,7 +139,3 @@ const FormDownloadQRCodeButton = styled.button`
   min-width: 128px;
   font-size: ${baseTheme.buttonFontSize};
 `;
-
-const CreateUser = Form.create()(CreateUserForm);
-
-export default CreateUser;

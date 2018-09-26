@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { baseTheme } from "../../theme/theme";
+import baseTheme from "../../theme/theme";
+
 
 export default props => {
   if (props.isFile) {
