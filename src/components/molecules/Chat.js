@@ -2,6 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import ChatView from './ChatView';
 import JoinRoom from "../pages/JoinRoom";
+import {
+  userProfile,
+  chatHandleConfirmReceiveMessage,
+  chatHandleJoinChannel,
+  chatHandleNewParticipantChannel,
+  chatHandleQuitChannel,
+  chatHandleReceiveMessage,
+  chatHandleSendMessage,
+  chatSendAnnouncement
+} from "../../lib/lib";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -16,6 +26,17 @@ export default class Chat extends React.Component {
       self: null
     };
 
+    this.bindMethods = this.bindMethods.bind(this);
+    this.bindMethods();
+
+    const user = userProfile();
+  }
+
+  createChatRoom() {
+    return 'aaaaaaaaaaaaaaaabbbc';
+  }
+
+  bindMethods() {
     this.createChatRoom = this.createChatRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
     this.exitRoom = this.exitRoom.bind(this);
@@ -27,18 +48,6 @@ export default class Chat extends React.Component {
     this.handleNewParticipant = this.handleNewParticipant.bind(this);
     this.sendAnnouncementMessage = this.sendAnnouncementMessage.bind(this);
     this.confirmReceivedMessage = this.confirmReceivedMessage.bind(this);
-
-    // setup from props
-    if (props.channel) {
-      console.log('Chat.constructor props.channel', props.channel);
-      this.joinRoom(props.channel).then(id => {
-        this.setState({ channelId: id });
-      })
-    }
-  }
-
-  createChatRoom() {
-    return 'aaaaaaaaaaaaaaaabbbc';
   }
 
   handleNewParticipant(name) {
@@ -172,7 +181,7 @@ export default class Chat extends React.Component {
         }}>
           {
             this.state.channelId ?
-              <ChatView 
+              <ChatView
                 channelId={this.state.channelId}
                 messages={this.state.messages}
                 participants={this.state.participants}

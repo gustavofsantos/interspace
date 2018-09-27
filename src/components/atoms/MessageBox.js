@@ -31,7 +31,7 @@ export default class MessageBox extends React.Component {
           flex: '1 1 auto',
           marginRight: '0.5em'
         }}>
-          <Input 
+          <Input
             placeholder="message"
             value={this.state.message}
             onChange={this.onChange.bind(this)}

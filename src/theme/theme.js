@@ -29,7 +29,9 @@ const theme1 = {
   labelFontSize: "16px",
   inputFontSize: "16px",
   headingFontSize: "18px",
-  buttonFontSize: "16px"
+  buttonFontSize: "16px",
+  paddingContainer: "16px",
+  marginContainer: "20px",
 }
 
 export const baseTheme = theme1;

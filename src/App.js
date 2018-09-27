@@ -10,6 +10,7 @@ import CreateUser from './components/pages/CreateUser';
 import ImportUser from './components/pages/ImportUser';
 import JoinRoom from './components/pages/JoinRoom';
 import AppBar from './components/molecules/AppBar';
+import Feed from './components/pages/Feed';
 
 const { Header, Content } = Layout;
 
@@ -73,6 +74,7 @@ export default class App extends Component {
                 <Route exact path="/" component={() => (<Loading loading={this.state.myId ? false : true} label="loading" />)} />
                 <Route path="/createuser" component={CreateUser} />
                 <Route path="/importuser" component={ImportUser} />
+                <Route path="/feed" component={Feed} />
                 <Route path="/chat" component={() => (
                   <Chat ipfs={this.ipfs}
                     myId={this.state.myId}

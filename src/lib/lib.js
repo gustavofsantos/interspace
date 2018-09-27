@@ -20,19 +20,34 @@ const app = {
   user: {},
   ready: false,
   id: null,
-  channels: []
+  channels: [],
+  feed: []
 }
 
-function ipfsReady() {
+/**
+ * Return the app feed
+ */
+export function appFeed() {
+  return app.feed;
+}
+
+/**
+ * Resolve to TRUE if IPFS is online
+ */
+export function ipfsReady() {
   return new Promise(resolve => {
     if (app.ready) {
       resolve(true);
     }
-    ipfs.on('ready', () => {
-      app.ready = true;
-      resolve(true);
-    });
+    resolve(ipfs.isOnline());
   });
+}
+
+/**
+ * Get actual user profile
+ */
+export function userProfile() {
+  return app.user;
 }
 
 /**
@@ -41,8 +56,7 @@ function ipfsReady() {
  * @param {string} description
  * @param {Buffer} picture
  */
-function userCreateProfile(name, description, key=null, picture = null) {
-  console.log('userCreateProfile');
+export function userCreateProfile(name, description, key=null, picture = null) {
   return new Promise((resolve, reject) => {
     ipfsReady().then(() => {
       ipfs.id().then(id => {
@@ -51,24 +65,19 @@ function userCreateProfile(name, description, key=null, picture = null) {
           description,
           picture,
           id: id.id,
-          friends: []
+          friends: [],
+          feed: []
         }
 
-        
         console.log('userCreateProfile app.user', app.user);
-        debugger;
         const profileString = JSON.stringify(app.user);
-        
-        debugger;
+
         // encrypt with key
-        // localStorage.setItem('interspaceprofile', profileString);
-        // debugger;
-        
+        localStorage.setItem('interspaceprofile', profileString);
         ipfs.files.add(Buffer.from(profileString), (err, files) => {
           if (err) reject(err);
           else {
-            console.log('ipfs profile added', files);
-            debugger;
+            localStorage.setItem('interspaceprofile', JSON.stringify({ profileHash: files[0].hash,  ...app.user }));
             resolve(app.user);
           }
         });
@@ -77,7 +86,11 @@ function userCreateProfile(name, description, key=null, picture = null) {
   });
 }
 
-function userAddFriend(friendCID) {
+/**
+ * add an friend to user array of friends
+ * @param {string} friendCID IPFS CID string
+ */
+export function userAddFriend(friendCID) {
   return new Promise((resolve, reject) => {
     ipfsReady().then(() => {
       ipfs.files.cat(friendCID)
@@ -96,29 +109,81 @@ function userAddFriend(friendCID) {
   });
 }
 
-function userSaveProfile() {
+/**
+ * Create a new publication of the user
+ * @param {string} title Publication title
+ * @param {string} content Publication content
+ */
+export function userNewPublication(title, content) {
+  return new Promise((resolve, reject) => {
+    const now = new Date;
+    const publication = {
+      title,
+      content,
+      date: now.toUTCString()
+    }
+
+    const publicationString = JSON.stringify(publication);
+
+    app.user.feed.push(publicationString);
+    ipfsReady().then(state => {
+      if (state) {
+        ipfs.files.add(Buffer.from(publicationString), (err, files) => {
+          if (err) reject(err);
+          else {
+            const publicationHash = files[0].hash;
+            const feedPublication = {
+              hash: publicationHash,
+              author: app.user,
+              ...publication
+            }
+
+            app.feed.push(feedPublication);
+            resolve(feedPublication);
+          }
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Save the current state of user profile in the local storage
+ */
+export function userSaveProfile() {
   const profileString = JSON.stringify(app.user);
   localStorage.setItem('interspaceprofile', profileString);
 }
 
-function userLoadProfile(profile = null) {
-  if (profile) {
-    // do some magic with profile.json
-  } else {
-    const profileString = localStorage.getItem('interspaceprofile');
-    const profileJson = JSON.parse(profileString);
-    profile = { ...profileJson };
-  }
+/**
+ * Load an profile into application
+ * @param {string} profile IPFS CID or JSON string
+ */
+export function userLoadProfile(profile = null) {
+  return new Promise((resolve, reject) => {
+    if (profile) {
+      // do some magic with profile.json
+    } else {
+      const profileString = localStorage.getItem('interspaceprofile');
+      const profileJson = JSON.parse(profileString);
+      app.user = { ...profileJson };
+      resolve(profileJson);
+    }
+  });
 }
 
 /**
  * export saved profile to json file
  */
-function userExportProfileToString() {
+export function userExportProfileToString() {
   return JSON.stringify(app.user);
 }
 
-function chatHandleJoinChannel(channel) {
+/**
+ * Enter user to an channel
+ * @param {string} channel Channel id
+ */
+export function chatHandleJoinChannel(channel) {
   return new Promise((resolve, reject) => {
     ipfsReady().then(() => {
       ipfs.pubsub.subscribe(
@@ -139,7 +204,7 @@ function chatHandleJoinChannel(channel) {
   });
 }
 
-function chatHandleQuitChannel(channel) {
+export function chatHandleQuitChannel(channel) {
   return new Promise((resolve, reject) => {
     ipfsReady().then(() => {
       ipfs.pubsub.unsubscribe(
@@ -157,7 +222,7 @@ function chatHandleQuitChannel(channel) {
   });
 }
 
-function chatHandleReceiveMessage(message) {
+export function chatHandleReceiveMessage(message) {
   return new Promise((resolve, reject) => {
     const msg = JSON.parse(message.data.toString());
     console.log('handleReceiveMessage: ', msg);
@@ -184,7 +249,7 @@ function chatHandleReceiveMessage(message) {
   })
 }
 
-function chatHandleSendMessage(message, channel, type='text') {
+export function chatHandleSendMessage(message, channel, type='text') {
   return new Promise((resolve, reject) => {
     this.ipfs.pubsub.publish(
       channel,
@@ -204,43 +269,43 @@ function chatHandleSendMessage(message, channel, type='text') {
   });
 }
 
-function chatHandleConfirmReceiveMessage(channel, messageId) {
+export function chatHandleConfirmReceiveMessage(channel, messageId) {
   return new Promise((resolve, reject) => {
     resolve('not done');
   });
 }
 
-function chatHandleNewParticipantChannel(name) {
+export function chatHandleNewParticipantChannel(name) {
   return new Promise((resolve, reject) => {
     resolve('not done');
   });
 }
 
-function chatSendAnnouncement(channel) {
+export function chatSendAnnouncement(channel) {
   return new Promise((resolve, reject) => {
     resolve('not done');
   });
 }
 
-function chatParticipantsActiveInChannel(channel) {
+export function chatParticipantsActiveInChannel(channel) {
   return new Promise((resolve, reject) => {
     resolve('not done');
   })
 }
 
-module.exports = {
-  ipfsReady,
-  userCreateProfile,
-  userAddFriend,
-  userExportProfileToString,
-  userLoadProfile,
-  userSaveProfile,
-  chatHandleReceiveMessage,
-  chatHandleConfirmReceiveMessage,
-  chatHandleJoinChannel,
-  chatHandleQuitChannel,
-  chatHandleNewParticipantChannel,
-  chatHandleSendMessage,
-  chatSendAnnouncement,
-  chatParticipantsActiveInChannel,
-}
+// export {
+//   ipfsReady,
+//   userCreateProfile,
+//   userAddFriend,
+//   userExportProfileToString,
+//   userLoadProfile,
+//   userSaveProfile,
+//   chatHandleReceiveMessage,
+//   chatHandleConfirmReceiveMessage,
+//   chatHandleJoinChannel,
+//   chatHandleQuitChannel,
+//   chatHandleNewParticipantChannel,
+//   chatHandleSendMessage,
+//   chatSendAnnouncement,
+//   chatParticipantsActiveInChannel,
+// }

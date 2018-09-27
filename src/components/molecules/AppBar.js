@@ -28,12 +28,26 @@ export default class AppBar extends React.Component {
                 this.state.menuState ?
                   <div>
                     <MenuView>
-                      <p>teste 1</p>
-                      <p>teste 2</p>
-                      <p>teste 3</p>
-                      <QRCodeContainer>
-                        <p>qr code</p>
-                      </QRCodeContainer>
+                      <MenuOption>
+                        <MenuOptionButton>
+                          teste 1
+                        </MenuOptionButton>
+                      </MenuOption>
+                      <MenuOption>
+                        <MenuOptionButton>
+                          teste 2
+                        </MenuOptionButton>
+                      </MenuOption>
+                      <MenuOption>
+                        <MenuOptionButton>
+                          teste 3
+                        </MenuOptionButton>
+                      </MenuOption>
+                      <MenuOption>
+                        <MenuOptionButton>
+                          qr code
+                        </MenuOptionButton>
+                      </MenuOption>
                     </MenuView>
                     <BackgroundScreenMenu />
                   </div>
@@ -82,7 +96,6 @@ const TopBarMenu = styled.div`
   display: block;
   position: absolute;
   right: 0px;
-  top: 0px;
 `;
 
 const TopBarMenuButton = styled.a`
@@ -95,7 +108,7 @@ const TopBarMenuButton = styled.a`
 
 const MenuView = styled.div`
   position: absolute;
-  right: -3px;
+  right: 0px;
   padding: 5px 10px;
   text-align: left;
   color: #FFF;
@@ -105,6 +118,16 @@ const MenuView = styled.div`
   display: block;
   width: calc(100vw - 18px);
   top: 45px;
+`;
+
+const MenuOption = styled.div`
+  margin: 10px;
+  display: block;
+`;
+
+const MenuOptionButton = styled.button`
+  background: none;
+  border: none;
 `;
 
 const BackgroundScreenMenu = styled.div`

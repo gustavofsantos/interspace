@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { userCreateProfile } from '../../lib/lib'
+import { userCreateProfile, userLoadProfile } from '../../lib/lib'
 import { baseTheme } from "../../theme/theme";
 
 export default class CreateUserForm extends React.Component {
@@ -25,15 +25,14 @@ export default class CreateUserForm extends React.Component {
     });
   }
 
-  handleCreateUser = (ev) => {
-    ev.preventDefault();
-    userCreateProfile(this.state.name, this.state.description)
-    .then(user => {
-      console.log('created user: ', user);
-    })
-    // this.setState({
-    //   ready: true
-    // });
+  handleCreateUser = async () => {
+    const user = await userCreateProfile(this.state.name, this.state.description)
+    console.log('created user: ', user);
+    if (user) {
+      this.setState({
+        ready: true
+      });
+    }
   }
 
   handleImportUser = ipfsCID => {
@@ -45,10 +44,25 @@ export default class CreateUserForm extends React.Component {
     console.log('handlePhotoUpload', ev.fileList);
   }
 
+  checkOfflineProfile = async () => {
+    const profile = await userLoadProfile();
+    if (profile) {
+      return (
+        <div>
+          <button>load user profile</button>
+        </div>
+      );
+    } else {
+      return (
+        <div></div>
+      );
+    }
+  }
+
   render() {
 
     if (this.state.ready) {
-      return <Redirect to="/chat" />
+      return <Redirect to="/feed" />
     }
 
     return (
@@ -82,12 +96,16 @@ export default class CreateUserForm extends React.Component {
             </FormDownloadQRCodeButton>
           </FormQRCode>
         </FormRow>
+
+        <div>
+          {this.checkOfflineProfile}
+        </div>
       </FormContainer>
     );
   }
 }
 
-const FormContainer = styled.form`
+const FormContainer = styled.div`
   background-color: ${baseTheme.colorBackground};
   color: ${baseTheme.colorForeground};
   border-radius: 5px;
@@ -105,6 +123,7 @@ const FormRow = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   flex-wrap: wrap;
+  padding: 12px;
 `;
 
 const FormLabel = styled.label`
@@ -123,7 +142,13 @@ const FormInput = styled.input`
 `;
 
 const FormButton = styled.button`
-
+  background-color: ${baseTheme.colorBackgroundDarker};
+  color: ${baseTheme.colorForeground};
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 128px;
+  font-size: ${baseTheme.buttonFontSize};
 `;
 
 const FormQRCode = styled.div`
