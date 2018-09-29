@@ -1,6 +1,13 @@
 import React from 'react';
-import { Tag } from "antd";
+import styled from 'styled-components';
 
 export default props => (
-  <Tag color="magenta">{props.participant || 'anon'}</Tag>
+  <ChipContainer color="magenta">{props.participant || 'anon'}</ChipContainer>
 );
+
+const ChipContainer = styled.div`
+  background-color: #DDD;
+  color: #444;
+  border: none;
+  border-radius: 12px;
+`;

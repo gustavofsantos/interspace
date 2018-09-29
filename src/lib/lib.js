@@ -18,6 +18,7 @@ const ipfs = new window.Ipfs({
 // runtime app object
 const app = {
   user: {},
+  userHash: '',
   ready: false,
   id: null,
   channels: [],
@@ -77,8 +78,9 @@ export function userCreateProfile(name, description, key=null, picture = null) {
         ipfs.files.add(Buffer.from(profileString), (err, files) => {
           if (err) reject(err);
           else {
+            app.userHash = files[0].hash;
             localStorage.setItem('interspaceprofile', JSON.stringify({ profileHash: files[0].hash,  ...app.user }));
-            resolve(app.user);
+            resolve({ userHash: app.userHash, ...app.user });
           }
         });
       });
@@ -98,6 +100,8 @@ export function userAddFriend(friendCID) {
         const friendString = friend.toString('utf8');
         const friendJson = JSON.parse(friendString);
 
+        console.log('friendJson:', friendJson);
+
         app.user.friends.push(friendJson);
 
         resolve(friendJson);
@@ -111,15 +115,14 @@ export function userAddFriend(friendCID) {
 
 /**
  * Create a new publication of the user
- * @param {string} title Publication title
  * @param {string} content Publication content
  */
-export function userNewPublication(title, content) {
+export function userNewPublication(content) {
   return new Promise((resolve, reject) => {
     const now = new Date;
     const publication = {
-      title,
       content,
+      author: app.userHash,
       date: now.toUTCString()
     }
 

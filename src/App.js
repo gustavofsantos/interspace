@@ -66,7 +66,6 @@ export default class App extends Component {
             background: '#000',
             color: '#FFF'
           }}>
-            <TopBar title={this.state.myId} channel={this.state.channel} />
           </Header>
           <Content>
             <Router>

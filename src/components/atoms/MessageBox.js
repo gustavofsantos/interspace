@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Button } from 'antd';
 import styled from 'styled-components';
-import theme from "../../theme/theme";
+import { baseTheme } from "../../theme/theme";
 
 export default class MessageBox extends React.Component {
   state = {

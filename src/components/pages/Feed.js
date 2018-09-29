@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { userProfile, appFeed, userNewPublication } from "../../lib/lib";
+import { userProfile, appFeed, userNewPublication, userAddFriend } from "../../lib/lib";
 import Publication from "../atoms/Publication";
 
 export default class Feed extends React.Component {
@@ -10,15 +10,9 @@ export default class Feed extends React.Component {
 
     this.state = {
       publications: [],
-      newPublicationTitle: '',
-      newPublicationContent: ''
+      newPublicationContent: '',
+      addFriendCid: ''
     }
-  }
-
-  newPublicationTitleChange = ev => {
-    this.setState({
-      newPublicationTitle: ev.target.value
-    });
   }
 
   newPublicationContentChange = ev => {
@@ -27,13 +21,32 @@ export default class Feed extends React.Component {
     });
   }
 
+  handleInputAddFriendChange = ev => {
+    this.setState({
+      addFriendCid: ev.target.value
+    });
+  }
+
+  handleAddFriend = async () => {
+    const friend = await userAddFriend(this.state.addFriendCid)
+    this.setState({
+      addFriendCid: ''
+    });
+  }
+
   handleNewPublication = async () => {
     console.log('handleNewPublication');
-    const publication = await userNewPublication(this.state.newPublicationTitle, this.state.newPublicationContent);
+    const publication = await userNewPublication(this.state.newPublicationContent);
     console.log('publication: ', publication);
-    this.setState(prevState => ({
-      publications: [publication, ...prevState.publications]
-    }));
+    if (this.state.publications) {
+      this.setState(prevState => ({
+        publications: [publication, ...prevState.publications]
+      }));
+    } else {
+      this.setState({
+        publications: [publication]
+      });
+    }
   }
 
   componentDidMount() {
@@ -51,12 +64,16 @@ export default class Feed extends React.Component {
 
     return (
       <FeedContainer>
+        <AddFriendContainer>
+          <input placeholder="friend cid"
+            onChange={this.handleInputAddFriendChange}
+            value={this.state.addFriendCid} />
+          <button onClick={this.handleAddFriend}>
+            add fiend
+          </button>
+        </AddFriendContainer>
         <NewPublicationContainer>
           <p>new publication</p>
-          <input
-            placeholder="title"
-            value={this.state.newPublicationTitle}
-            onChange={this.newPublicationTitleChange} />
 
           <input
             placeholder="content"
@@ -71,7 +88,6 @@ export default class Feed extends React.Component {
           {
             this.state.publications.map((publication, key) => (
               <Publication
-                title={publication.title}
                 content={publication.content}
                 date={publication.date}
                 hash={publication.hash}
@@ -87,6 +103,10 @@ export default class Feed extends React.Component {
 
 const FeedContainer = styled.div`
   padding: 12px;
+`;
+
+const AddFriendContainer = styled.div`
+
 `;
 
 const PublicationsContainer = styled.div`

@@ -15,7 +15,7 @@ export default props => (
     </PublicationContent>
 
     <PublicationFooterContainer>
-      <p>footer</p>
+      <p>{props.hash}</p>
     </PublicationFooterContainer>
   </PublicationContainer>
 );

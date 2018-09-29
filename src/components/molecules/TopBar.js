@@ -40,7 +40,6 @@ export default class TopBar extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
     return (
       <div>
         <span>
